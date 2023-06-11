@@ -56,6 +56,7 @@ export class EmailService {
     studentId: string,
     amount: number,
   ): Promise<void> {
+    const currentDate = new Date();
     // Define the email options
     const mailgenerator = new mailgen({
       theme: 'default',
@@ -69,13 +70,12 @@ export class EmailService {
         name: name,
         intro: `Dear ${name},
 
-        We hope this email finds you well. We are writing to confirm the successful receipt of your fee payment for the current academic period at [University/School Name]. We appreciate your timely payment and your commitment to your education.
-        
+     
         Here are the details of your fee payment:
         
         Amount Paid: ${amount}
         Payment Method: card
-        Payment Date: ${new Date().toLocaleDateString()}
+        Payment Date: ${currentDate}
         `,
       },
     };
@@ -88,13 +88,8 @@ export class EmailService {
     };
 
     // Send the email using the transporter
-    await this.transporter
-      .sendMail(message)
-      .then(() => {
-        console.log('Email sent successfully');
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    await this.transporter.sendMail(message).catch((err) => {
+      console.log(err);
+    });
   }
 }

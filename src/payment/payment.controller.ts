@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { PaymentService } from './payment.service';
 import { Roles } from 'src/decorators/role.decorator';
 import { UserRole } from '@prisma/client';
@@ -27,6 +27,7 @@ export class PaymentController {
     private readonly paymentService: PaymentService,
     private readonly mailService: EmailService,
     private readonly feesService: FeesService,
+    private readonly authService: AuthService,
   ) {}
   @Roles(UserRole.STUDENT)
   @Post('create-payment-intent')
@@ -34,21 +35,31 @@ export class PaymentController {
     @Body() body: CreatePaymentInput,
     @User() user: userType,
   ) {
-    const payment = this.paymentService.createPaymentIntent(body.line_items);
+    const payment = await this.paymentService.createPaymentIntent(
+      body.line_items,
+    );
+    const currentUser = await this.authService.getCurrentUser(user.id);
     if (payment) {
-      this.feesService.createFee({
+      const fees = await this.feesService.createFee({
         studentId: user.id,
-        amount: body[0].price_data.unit_amount,
-        email: user.email,
+        amount: body.line_items[0].price_data.unit_amount,
+        email: currentUser.email,
       });
-      this.mailService.sendPaymentEmail(
-        user.email,
-        user.name,
-        user.id,
+      if (fees) {
+        await this.mailService.sendPaymentEmail(
+          currentUser.email,
+          user.name,
+          user.id,
+          body.line_items[0].price_data.unit_amount,
+        );
+      }
 
-        body[0].price_data.unit_amount,
-      );
       return payment;
     }
+  }
+  @Roles(UserRole.STUDENT)
+  @Get('/history')
+  async getPaymentByStudentId(@User() user: userType) {
+    return this.feesService.getFeesByStudentId(user.id);
   }
 }

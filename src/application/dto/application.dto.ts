@@ -23,16 +23,19 @@ export class ApplicationDto {
   @IsString()
   @IsNotEmpty()
   mobileNumber: string;
+  sId: string;
 }
 export class ApplicationResponseDto {
   id: string;
-  name: string;
   candidateImage: string;
+  name: string;
   studentId: string;
   email: string;
   guardianName: string;
   guardianNID: string;
   mobileNumber: string;
+  sId: string;
+
   @Exclude()
   created_at: Date;
   @Exclude()

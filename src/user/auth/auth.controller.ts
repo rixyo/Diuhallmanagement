@@ -24,9 +24,17 @@ export class AuthController {
     @Param('userType', new ParseEnumPipe(UserRole)) userType: UserRole,
     @Body() body: SignupDto,
   ) {
-    const signuprespone = await this.authService.signup(body, userType);
-    this.mailService.sendEmail(body.email, body.name);
-    return signuprespone;
+    if (userType === UserRole.STUDENT) {
+      return this.authService.signup(body, userType);
+    } else if (userType === UserRole.ADMIN) {
+      const isValid = process.env.SECRET_KEY === body.SecretKey;
+      if (!isValid) return { message: 'invalid credentails' };
+      const user = await this.authService.signup(body, userType);
+      if (user) {
+        this.mailService.sendEmail(body.email, body.name);
+      }
+      return user;
+    }
   }
   @Post('login')
   login(@Body() body: LoginDto) {

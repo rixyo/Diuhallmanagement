@@ -4,7 +4,6 @@ export interface userType {
   id: string;
   name: string;
   role: UserRole;
-  email: string;
   iat: number;
   exp: number;
 }

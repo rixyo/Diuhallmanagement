@@ -42,6 +42,7 @@ export class AuthGuard implements CanActivate {
   }
   async matchRoles(roles: UserRole[], userId: string) {
     const user = await this.prisma.user.findUnique({ where: { id: userId } });
-    return roles.includes(user.role);
+    if (!user) return false;
+    return roles.includes(user?.role);
   }
 }

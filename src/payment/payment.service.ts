@@ -6,7 +6,7 @@ export class PaymentService {
   private stripe: Stripe;
 
   constructor() {
-    this.stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+    this.stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
       apiVersion: '2022-11-15',
     });
   }
@@ -17,7 +17,7 @@ export class PaymentService {
         line_items: line_items,
         mode: 'payment',
         success_url: 'http://localhost:3000/success',
-        cancel_url: 'http://localhost:3000/?canceled=true',
+        cancel_url: 'http://localhost:3000/',
         payment_method_types: ['card'],
       });
 
