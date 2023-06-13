@@ -17,7 +17,6 @@ export class EmailService {
     });
   }
   async sendEmail(to: string, name: string): Promise<void> {
-    // Define the email options
     const mailgenerator = new mailgen({
       theme: 'default',
       product: {
@@ -25,6 +24,7 @@ export class EmailService {
         link: 'https://mailgen.js/',
       },
     });
+    // Define the email options
     const response = {
       body: {
         name: name,
@@ -34,7 +34,7 @@ export class EmailService {
     };
     const email = mailgenerator.generate(response);
     const message = {
-      from: 'rixy253@gamil.com',
+      from: process.env.EMAIL,
       to: to,
       subject: 'Hall Booking Application Confirmation',
       html: email,

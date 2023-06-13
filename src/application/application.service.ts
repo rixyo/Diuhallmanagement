@@ -42,7 +42,7 @@ export class ApplicationService {
     return new ApplicationResponseDto(application);
   }
   async getAllApplications() {
-    return this.prisma.application.findMany({
+    return await this.prisma.application.findMany({
       orderBy: {
         created_at: 'desc',
       },

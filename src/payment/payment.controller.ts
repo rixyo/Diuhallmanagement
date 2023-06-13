@@ -35,27 +35,26 @@ export class PaymentController {
     @Body() body: CreatePaymentInput,
     @User() user: userType,
   ) {
-    const payment = await this.paymentService.createPaymentIntent(
-      body.line_items,
-    );
-    const currentUser = await this.authService.getCurrentUser(user.id);
-    if (payment) {
+    const { line_items } = body;
+    const session = await this.paymentService.createPaymentIntent(line_items);
+    const { email, name } = await this.authService.getCurrentUser(user.id);
+    if (session.created) {
       const fees = await this.feesService.createFee({
         studentId: user.id,
-        amount: body.line_items[0].price_data.unit_amount,
-        email: currentUser.email,
+        amount: session.amount_total,
+        email: email,
       });
       if (fees) {
+        console.log('fees created');
         await this.mailService.sendPaymentEmail(
-          currentUser.email,
-          user.name,
+          email,
+          name,
           user.id,
-          body.line_items[0].price_data.unit_amount,
+          session.amount_total,
         );
       }
-
-      return payment;
     }
+    return { sessionId: session.id };
   }
   @Roles(UserRole.STUDENT)
   @Get('/history')

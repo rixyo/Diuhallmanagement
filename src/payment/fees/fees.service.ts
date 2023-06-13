@@ -9,7 +9,7 @@ interface CreateFeeInput {
 export class FeesService {
   constructor(private readonly prisma: PrismaService) {}
   async createFee({ studentId, amount, email }: CreateFeeInput) {
-    return this.prisma.fees.create({
+    return await this.prisma.fees.create({
       data: {
         studentId,
         amount,
@@ -18,7 +18,7 @@ export class FeesService {
     });
   }
   async getFeesByStudentId(studentId: string) {
-    return this.prisma.fees.findMany({
+    return await this.prisma.fees.findMany({
       where: {
         studentId: studentId,
       },
