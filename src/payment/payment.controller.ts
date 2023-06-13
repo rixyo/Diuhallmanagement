@@ -45,7 +45,6 @@ export class PaymentController {
         email: email,
       });
       if (fees) {
-        console.log('fees created');
         await this.mailService.sendPaymentEmail(
           email,
           name,
