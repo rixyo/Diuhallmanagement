@@ -18,6 +18,6 @@ async function main() {
     origin: 'http://localhost:3000',
     credentials: true,
   });
-  await app.listen(5000);
+  await app.listen(process.env.PORT || 5000);
 }
 main();

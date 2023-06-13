@@ -38,22 +38,12 @@ export class PaymentController {
     const { line_items } = body;
     const session = await this.paymentService.createPaymentIntent(line_items);
     const { email, name } = await this.authService.getCurrentUser(user.id);
-    if (session.created) {
-      const fees = await this.feesService.createFee({
-        studentId: user.id,
-        amount: session.amount_total,
-        email: email,
-      });
-      if (fees) {
-        await this.mailService.sendPaymentEmail(
-          email,
-          name,
-          user.id,
-          session.amount_total,
-        );
-      }
-    }
-    return { sessionId: session.id };
+    await this.mailService.sendPaymentEmail(
+      email,
+      name,
+      user.id,
+      session.amount_total,
+    );
   }
   @Roles(UserRole.STUDENT)
   @Get('/history')
