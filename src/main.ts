@@ -15,7 +15,7 @@ async function main() {
   );
   app.use(cookieParser());
   app.enableCors({
-    origin: 'http://localhost:3000',
+    origin: 'https://diuhallmanagement-client.vercel.app/',
     credentials: true,
   });
   await app.listen(process.env.PORT || 5000);
