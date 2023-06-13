@@ -15,7 +15,7 @@ async function main() {
   );
   app.use(cookieParser());
   app.enableCors({
-    origin: 'https://diuhallmanagement-client.vercel.app',
+    origin: 'https://hall-diu.vercel.app',
     credentials: true,
   });
   await app.listen(process.env.PORT || 5000);
