@@ -37,13 +37,13 @@ export class PaymentController {
   ) {
     const { line_items } = body;
     const session = await this.paymentService.createPaymentIntent(line_items);
-    if (session) {
+    if (session.status === 'complete') {
       const { email, name } = await this.authService.getCurrentUser(user.id);
       await this.mailService.sendPaymentEmail(
         email,
         name,
         user.id,
-        session.amount_total,
+        session.amount_total / 100,
       );
     }
     return session;

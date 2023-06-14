@@ -11,6 +11,7 @@ interface CreateApplicationInput {
   guardianNID: string;
   mobileNumber: string;
   sId: string;
+  guardianMobileNumber: string;
 }
 @Injectable()
 export class ApplicationService {
@@ -24,6 +25,7 @@ export class ApplicationService {
       guardianNID,
       guardianName,
       mobileNumber,
+      guardianMobileNumber,
     }: CreateApplicationInput,
     sId: string,
   ): Promise<ApplicationResponseDto> {
@@ -37,6 +39,7 @@ export class ApplicationService {
         guardianName,
         guardianNID,
         mobileNumber,
+        guardianMobileNumber,
       },
     });
     return new ApplicationResponseDto(application);
@@ -60,7 +63,7 @@ export class ApplicationService {
     });
   }
   async gethistoryById(studenId: string) {
-    return this.prisma.application.findMany({
+    return await this.prisma.application.findMany({
       where: {
         sId: studenId,
       },
@@ -69,6 +72,7 @@ export class ApplicationService {
       },
       select: {
         candidateImage: true,
+        guardianMobileNumber: true,
         name: true,
         studentId: true,
         email: true,
