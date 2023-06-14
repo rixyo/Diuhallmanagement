@@ -38,7 +38,7 @@ export class PaymentController {
     const { line_items } = body;
     const session = await this.paymentService.createPaymentIntent(line_items);
     const { email, name } = await this.authService.getCurrentUser(user.id);
-    await this.mailService.sendPaymentEmail(
+    this.mailService.sendPaymentEmail(
       email,
       name,
       user.id,

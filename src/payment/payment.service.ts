@@ -16,8 +16,8 @@ export class PaymentService {
       const session = await this.stripe.checkout.sessions.create({
         line_items: line_items,
         mode: 'payment',
-        success_url: 'https://diuhallmanagement-client.vercel.app/success',
-        cancel_url: 'https://diuhallmanagement-client.vercel.app/',
+        success_url: 'https://hall-diu.vercel.app/success',
+        cancel_url: 'https://hall-diu.vercel.app',
         payment_method_types: ['card'],
       });
 
