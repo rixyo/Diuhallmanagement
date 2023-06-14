@@ -24,6 +24,9 @@ export class ApplicationDto {
   @IsNotEmpty()
   mobileNumber: string;
   sId: string;
+  @IsString()
+  @IsNotEmpty()
+  guardianMobileNumber: string;
 }
 export class ApplicationResponseDto {
   id: string;
