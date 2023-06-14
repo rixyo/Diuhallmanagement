@@ -37,13 +37,17 @@ export class PaymentController {
   ) {
     const { line_items } = body;
     const session = await this.paymentService.createPaymentIntent(line_items);
+    if (session.payment_status !== 'paid') {
+      throw new Error('Payment was not successful');
+    }
     const { email, name } = await this.authService.getCurrentUser(user.id);
-    this.mailService.sendPaymentEmail(
+    await this.mailService.sendPaymentEmail(
       email,
       name,
       user.id,
       session.amount_total,
     );
+    return session;
   }
   @Roles(UserRole.STUDENT)
   @Get('/history')
