@@ -37,16 +37,15 @@ export class PaymentController {
   ) {
     const { line_items } = body;
     const session = await this.paymentService.createPaymentIntent(line_items);
-    if (session.payment_status !== 'paid') {
-      throw new Error('Payment was not successful');
+    if (session) {
+      const { email, name } = await this.authService.getCurrentUser(user.id);
+      await this.mailService.sendPaymentEmail(
+        email,
+        name,
+        user.id,
+        session.amount_total,
+      );
     }
-    const { email, name } = await this.authService.getCurrentUser(user.id);
-    await this.mailService.sendPaymentEmail(
-      email,
-      name,
-      user.id,
-      session.amount_total,
-    );
     return session;
   }
   @Roles(UserRole.STUDENT)
