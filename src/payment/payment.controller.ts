@@ -43,7 +43,7 @@ export class PaymentController {
         email,
         name,
         user.id,
-        session.amount_total / 100,
+        session.amount_total / 1000,
       );
     }
     return session;
