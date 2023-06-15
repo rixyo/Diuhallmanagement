@@ -53,7 +53,7 @@ export class EmailService {
   async sendPaymentEmail(
     to: string,
     name: string,
-    studentId: string,
+    sessionId: string,
     amount: number,
   ): Promise<void> {
     const currentDate = new Date();
@@ -72,8 +72,9 @@ export class EmailService {
 
      
         Here are the details of your fee payment:
-        
+        payment Id: ${sessionId}
         Amount Paid: ${amount}
+        Fee Type: Hall Fee
         Payment Method: card
         Payment Date: ${currentDate}
         `,
@@ -81,7 +82,7 @@ export class EmailService {
     };
     const email = mailgenerator.generate(response);
     const message = {
-      from: 'rixy253@gamil.com',
+      from: process.env.EMAIL,
       to: to,
       subject: `Fee Payment Confirmation  `,
       html: email,

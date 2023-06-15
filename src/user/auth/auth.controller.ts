@@ -40,7 +40,7 @@ export class AuthController {
   login(@Body() body: LoginDto) {
     return this.authService.signin(body);
   }
-  @Roles(UserRole.ADMIN, UserRole.STUDENT)
+  @Roles(UserRole.STUDENT)
   @Get('me')
   me(@User() user: userType) {
     return this.authService.getCurrentUser(user.id);

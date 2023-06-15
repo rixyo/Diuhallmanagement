@@ -10,13 +10,15 @@ import { User, userType } from 'src/user/decorators/user.decorator';
 export interface line_items {
   price_data: {
     currency: string;
+    unit_amount: number;
     product_data: {
       name: string;
+      description: string;
     };
-    unit_amount: number;
   };
-  quantity: number;
+  quantity: 1;
 }
+
 interface CreatePaymentInput {
   line_items: line_items[];
 }
@@ -37,13 +39,14 @@ export class PaymentController {
   ) {
     const { line_items } = body;
     const session = await this.paymentService.createPaymentIntent(line_items);
-    if (session.status === 'complete') {
-      const { email, name } = await this.authService.getCurrentUser(user.id);
+
+    const { email, name } = await this.authService.getCurrentUser(user.id);
+    if (session.id) {
       await this.mailService.sendPaymentEmail(
         email,
         name,
-        user.id,
-        session.amount_total / 1000,
+        session.id,
+        session.amount_total / 100,
       );
     }
     return session;

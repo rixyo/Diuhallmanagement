@@ -15,7 +15,7 @@ async function main() {
   );
   app.use(cookieParser());
   app.enableCors({
-    origin: 'https://hall-diu.vercel.app',
+    origin: process.env.PROD_CLIENT_URL,
     credentials: true,
   });
   await app.listen(process.env.PORT || 5000);
